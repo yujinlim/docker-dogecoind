@@ -17,7 +17,9 @@ EOF
 
 	fi
 
+	chown -R $USER $HOME/.dogecoin
 	cat $HOME/.dogecoin/dogecoin.conf
 fi
 
-dogecoind "$@"
+chown -R $USER .
+exec gosu $USER dogecoind "$@"
