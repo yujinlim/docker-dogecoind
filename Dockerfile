@@ -50,4 +50,7 @@ RUN apt-get purge -y --auto-remove \
 ADD scripts/dogecoind_start.sh /usr/local/bin
 RUN chmod +x /usr/local/bin/dogecoind_start.sh
 
+ADD scripts/setup /usr/local/bin
+RUN chmod +x /usr/local/bin/setup
+
 ENTRYPOINT ["dogecoind_start.sh"]
