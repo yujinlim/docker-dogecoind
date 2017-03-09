@@ -22,16 +22,18 @@ VOLUME ["/dogecoin"]
 
 EXPOSE 22555 22556 44555 44556
 
-WORKDIR $workdir
+WORKDIR ${HOME}
 
-RUN wget -qO- https://github.com/dogecoin/dogecoin/releases/download/v1.10.0/dogecoin-1.10.0-linux64.tar.gz \
+RUN mkdir -p $workdir
+RUN cd $workdir && \
+		wget -qO- https://github.com/dogecoin/dogecoin/releases/download/v1.10.0/dogecoin-1.10.0-linux64.tar.gz \
 		| tar --strip-components=1 -xz \
+		# && chown -R ${user_id} /usr/local/dogecoin/bin/* \
 		&& ln -s /usr/local/dogecoin/bin/* /usr/local/bin/
 
 # grab gosu for easy step-down from root
 ENV GOSU_VERSION 1.10
 RUN set -x \
-		&& apt-get update && apt-get install -y --no-install-recommends ca-certificates wget \
 		&& dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')" \
 		&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch" \
 		&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$dpkgArch.asc" \
